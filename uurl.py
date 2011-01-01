@@ -13,6 +13,7 @@ redis_cli = redis.Redis()
 def uurl_stats(uurl):
     return template('stats', uurl = uurl)
 
+@route('/:uid')
 @route('/u')
 @route('/u/:uid')
 def url(uid = None):
