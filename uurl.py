@@ -3,7 +3,7 @@ import redis
 import json
 from redis_util import _get_url_stats_by_uid, _update_encoded_url_data, _update_url_data, _get_url_by_uid
 import os
-os.chdir(os.path.dirname(__file__))
+if len(os.path.dirname(__file__)) > 1: os.chdir(os.path.dirname(__file__))
 
 BASE_URL = "http://7co.cc/"
 
@@ -41,7 +41,7 @@ def stats(uid):
 def post_url():
     url = request.POST['url']
     if url != None and len(url) > 1:
-        if url.find(BASE_URL): abort(404, 'invalid url')
+        if url.find(BASE_URL) > -1: abort(404, 'invalid url')
         uurl = _update_url_data(redis_cli, url)
         if uurl == None: abort(404, 'empty request')
         return template('resp', uurl=uurl, base_url=BASE_URL)
@@ -62,4 +62,4 @@ class GEventServerAdapter(ServerAdapter):
 
 debug(True)
 
-run(host='localhost', port=8080, server=GEventServerAdapter)
+run(host='localhost', port=10000, server=GEventServerAdapter)
