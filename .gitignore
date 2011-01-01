@@ -1,0 +1,8 @@
+*.pyc
+*.json
+*~
+*.swp
+*.swo
+*.pid
+*.redis
+convert.py
