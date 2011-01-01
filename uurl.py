@@ -2,6 +2,8 @@ from bottle import route, redirect, run, debug, send_file, abort, request, Serve
 import redis
 import json
 from redis_util import _get_url_stats_by_uid, _update_encoded_url_data, _update_url_data, _get_url_by_uid
+import os
+os.chdir(os.path.dirname(__file__))
 
 BASE_URL = "http://7co.cc/"
 

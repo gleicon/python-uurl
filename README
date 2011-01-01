@@ -1,7 +1,7 @@
 URL Shortener using Bottle.py, redis and gevent
 - Stores all stats in Redis using HASH datatype
 - monkey patch and server adapter for WSGI and GEvent
-- God scripts to help running it if you want
+- Supervisord config file to keep it sane
 
 INSTALL
 install python-redis (thru apt, or easy_install redis)
