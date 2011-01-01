@@ -1,0 +1,6 @@
+[program:uurl]
+command=/usr/bin/python /opt/uurl/uurl.py
+redirect_stderr=true
+stdout_logfile=/var/log/uurl.log
+stdout_logfile_maxbytes=10MB
+
