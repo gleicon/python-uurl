@@ -6,8 +6,15 @@ import os
 if len(os.path.dirname(__file__)) > 1: os.chdir(os.path.dirname(__file__))
 
 BASE_URL = "http://7co.cc/"
+STATIC_ROOT_PATH = "static/"
 
 redis_cli = redis.Redis()
+
+@route('/')
+@route('/:filename#.*[\.css|\.html|\.js]#')
+def static_file(filename='index.html'):
+    send_file(filename, root=STATIC_ROOT_PATH)
+
 
 @route('/:uurl!')
 def uurl_stats(uurl):
@@ -48,11 +55,6 @@ def post_url():
         return template('resp', uurl=uurl, base_url=BASE_URL)
     else:
         redirect('/')
-
-@route('/')
-@route('/:filename#.*#')
-def static_file(filename='index.html'):
-    send_file(filename, root='static/')
 
 class GEventServerAdapter(ServerAdapter):
     def run(self, handler):
