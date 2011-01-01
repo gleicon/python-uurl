@@ -20,7 +20,7 @@ case "$1" in
     ;;
   stop)
         echo -n "Stopping $DESC: "
-      kill `cat /var/run/god.pid`
+      kill `cat $PIDFILE`
       kill `ps -e -o pid,command | grep node -m 1 | awk '{ print $1; }'`
       RETVAL=$?
       echo "God stopped"
