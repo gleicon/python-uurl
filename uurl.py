@@ -50,6 +50,7 @@ def post_url():
     url = request.POST['url']
     if url != None and len(url) > 1:
         if url.find(BASE_URL) > -1: abort(404, 'invalid url')
+        if url.find('http') < 0: url = "http://%s" % url
         uurl = _update_url_data(redis_cli, url)
         if uurl == None: abort(404, 'empty request')
         return template('resp', uurl=uurl, base_url=BASE_URL)

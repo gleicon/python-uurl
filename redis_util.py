@@ -24,7 +24,7 @@ def _update_url_data(redis_cli, url):
         redis_cli.hset(k, 'date_creation', t)
         redis_cli.hset(k, 'url', url)
         return uid
-    return None
+    return u
 
 def _get_uuid(redis_cli):
     return redis_cli.incr(UNIQUE_COUNTER)
