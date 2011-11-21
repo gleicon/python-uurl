@@ -4,21 +4,23 @@ import json
 from redis_util import _get_url_stats_by_uid, _update_encoded_url_data, _update_url_data, _get_url_by_uid
 import os
 if len(os.path.dirname(__file__)) > 1: os.chdir(os.path.dirname(__file__))
+import logging
 
-BASE_URL = "http://7co.cc/"
+BASE_URL = "http://chu.pe/"
 STATIC_ROOT_PATH = "static/"
 
 redis_cli = redis.Redis()
+if BASE_URL[-1] is not '/': BASE_URL = BASE_URL + '/'
 
 @route('/')
-@route('/:filename#.*[\.css|\.html|\.js]#')
+@route('/index.html')
+@route('/static/:filename#.*[\.css|\.html|\.js|\.png]#')
 def static_file(filename='index.html'):
     send_file(filename, root=STATIC_ROOT_PATH)
 
-
 @route('/:uurl!')
 def uurl_stats(uurl):
-    return template('stats', uurl = uurl)
+    return template('stats', uurl = uurl, base_url=BASE_URL)
 
 @route('/:uid')
 @route('/u')
@@ -41,6 +43,7 @@ def stats(uid):
         jc = request.GET['jsoncallback']
     except Exception, e:
         jc = None
+	logging.info(e)
     stats = _get_url_stats_by_uid(redis_cli, uid)
     if jc != None: return "%s(%s)"% (jc, json.dumps(stats))
     return json.dumps(stats)
@@ -64,6 +67,6 @@ class GEventServerAdapter(ServerAdapter):
         from gevent.wsgi import WSGIServer
         WSGIServer((self.host, self.port), handler).serve_forever()
 
-debug(True)
+#debug(True)
 
-run(host='localhost', port=10000, server=GEventServerAdapter)
+run(host='localhost', port=14000, server=GEventServerAdapter)
