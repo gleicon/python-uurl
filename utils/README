@@ -1,0 +1,2 @@
+Initial work to import/export uurl data. For now, rely on redis backup.
+The main key prefixes are listed on dump_db.py
