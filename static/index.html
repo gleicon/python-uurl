@@ -18,7 +18,6 @@
         padding-top: 60px;
       }
     </style>
-
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
@@ -47,11 +46,12 @@
         </div>
         <div class="span11">
           <br><br><br>
-          <form method='POST' action='/url'>
-          <input style="width:500px;" type='text' name='url' maxlength=1024>
+          <p>URL shortener.</p><br>
+          <form method='POST' action='/url' id='shorten'>
+          <input style="width:200px; margin:5px;" type='text' id = 'custom_url' name='custom_url' maxlength=100 placeholder="custom name (optional)" >
+          <input style="width:500px; margin:5px" type='text' id = 'url' name='url' maxlength=1024 placeholder="URL to be shortened">
           <input type='submit' name='submit'>
         </form>
-          <p>URL to be shortened.</p>
        </div>
       </div>
       <footer>

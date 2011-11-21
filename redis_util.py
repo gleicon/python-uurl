@@ -11,12 +11,15 @@ ENCODED_URL_DICT = 'URL:UID:DATA:%s'
 ENCODED_URL_STATS_DICT = 'URL:UID:STATS:%s'
 ENCODED_URL_MASK = 'URL:UID:MASK:%s'
 
-def _update_url_data(redis_cli, url):
+def _update_url_data(redis_cli, url, custom_url = None):
     k = URL_MASK % url
     u = redis_cli.get(k)
     if u == None: 
-        id = _get_uuid(redis_cli)
-        uid = base62.base62_encode(id)
+        if custom_url is None:
+            id = _get_uuid(redis_cli)
+            uid = base62.base62_encode(id)
+        else:
+            uid = custom_url
         redis_cli.set(k, uid)
         redis_cli.set(ENCODED_URL_MASK % uid, url)
         t = int(time.time())
