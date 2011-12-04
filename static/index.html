@@ -18,6 +18,25 @@
         padding-top: 60px;
       }
     </style>
+    <script type="text/javascript" src="/static/jquery.min.js"></script>
+    <script>
+    $(function(){
+        $("#shorten").submit(function() {
+            var u = $("#url").val();
+            var c = $("#custom_url").val();
+            $.post("/url", {url: u, custom_url: c}, 
+                function(w){ 
+                    console.log(w);
+                    uurl = w.base_url+w.uurl;
+
+                    $("#results").append("url: <a href="+uurl+">"+uurl+"</a><br>");
+                    $("#results").append("stats: <a href="+uurl+"!>"+uurl+"!</a><br>");
+                });
+                return false;
+        }); 
+    });
+
+    </script>
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
@@ -52,6 +71,8 @@
           <input style="width:500px; margin:5px" type='text' id = 'url' name='url' maxlength=1024 placeholder="URL to be shortened">
           <input type='submit' name='submit'>
         </form>
+        <div class="span11" id="results">
+        </div>
        </div>
       </div>
       <footer>

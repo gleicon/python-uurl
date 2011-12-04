@@ -1,0 +1,40 @@
+uurl is mostly API based. The bundled HTMLs realy heavily on jquery and js to emulate the feel of a complete web application, but they are not required to run.
+
+http://uurl/url - creates URL
+method: POST
+creates a shortened URL
+
+    parameters: 
+    url: original url
+    custom_url: wont generate a hash, will use a customized handler instead
+    
+    response:
+    json with original url, base url for shortener and the shortened id.
+    to assemble the full url, join both base_url and the id.
+
+    example:
+    $ curl -d "url=http://lmao5.net" localhost:14000/url
+    {"uurl":B, "url": "http://lmao5.net", "base_url": "http://localhost:14000/"}
+
+
+http://uurl/s/:id
+method: GET
+retrieves the shortened url stats, including clicks, referers, request addresses.
+
+    example:
+    $ curl http://localhost:14000/s/1
+    {"cph": {"2011.11.20.22": "1"}, "referers": [], "url": "http://slashdot.org", "clicks": "1", "visitors": [], "date_creation": "1321834123"}
+
+http://uurl/:id
+METHOD: GET
+Send the proper redirect request to the shortened URL
+
+    $ curl -I -X HEAD http://localhost:14000/B
+    HTTP/1.1 303 See Other
+    Content-Length: 0
+    Content-Type: text/html; charset=UTF-8
+    Location: http://lmao5.net
+    Server: gevent/0.13 Python/2.7
+    Connection: close
+    Date: Sun, 04 Dec 2011 23:42:23 GMT
+
