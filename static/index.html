@@ -26,7 +26,6 @@
             var c = $("#custom_url").val();
             $.post("/url", {url: u, custom_url: c}, 
                 function(w){ 
-                    console.log(w);
                     uurl = w.base_url+w.uurl;
 
                     $("#results").append("url: <a href="+uurl+">"+uurl+"</a><br>");
