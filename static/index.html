@@ -24,14 +24,16 @@
         $("#shorten").submit(function() {
             var u = $("#url").val();
             var c = $("#custom_url").val();
-            $.post("/url", {url: u, custom_url: c}, 
-                function(w){ 
-                    uurl = w.base_url+w.uurl;
+            var cb = function(w){
+                var res = $("#results");
+                uurl = w.base_url+w.uurl;
+                console.log(uurl);
+                res.append("url: <a href="+uurl+">"+uurl+"</a><br>");
+                res.append("stats: <a href="+uurl+"!>"+uurl+"!</a><br>");
+            };
 
-                    $("#results").append("url: <a href="+uurl+">"+uurl+"</a><br>");
-                    $("#results").append("stats: <a href="+uurl+"!>"+uurl+"!</a><br>");
-                });
-                return false;
+            $.post("/url", {url: u, custom_url: c}, cb, "json");
+            return false;
         }); 
     });
 

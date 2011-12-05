@@ -62,7 +62,7 @@ def post_url():
         uurl = _update_url_data(redis_cli, url, custom_url)
         if uurl == None: abort(404, 'empty request')
         response.content_type = "application/json"
-        return '{"uurl":%s, "url": "%s", "base_url": "%s"}' % (uurl, url, BASE_URL)
+        return '{"uurl":"%s", "url": "%s", "base_url": "%s"}' % (uurl, url, BASE_URL)
     else:
         abort(500, "empty url parameter")
 
