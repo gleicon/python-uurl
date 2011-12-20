@@ -45,8 +45,13 @@ def stats(uid):
         jc = None
     stats = _get_url_stats_by_uid(redis_cli, uid)
     response.content_type="application/json"
-    if jc != None: return "%s(%s)"% (jc, json.dumps(stats))
-    return json.dumps(stats)
+    if stats is None:
+        abort(404, 'No url')
+    else:
+        if jc != None: 
+            return "%s(%s)"% (jc, json.dumps(stats))
+        else:
+            return json.dumps(stats)
 
 @route('/url', method='POST')
 def post_url():
@@ -73,5 +78,5 @@ class GEventServerAdapter(ServerAdapter):
         from gevent.wsgi import WSGIServer
         WSGIServer((self.host, self.port), handler).serve_forever()
 
-
+debug(True)
 run(host='localhost', port=14000, server=GEventServerAdapter)
