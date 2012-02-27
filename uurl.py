@@ -1,15 +1,22 @@
 from bottle import route, redirect, run, debug, send_file, abort, request, ServerAdapter, template, response
 import redis
 import json
+import logging
 from redis_util import _get_url_stats_by_uid, _update_encoded_url_data, _update_url_data, _get_url_by_uid
 import os
 if len(os.path.dirname(__file__)) > 1: os.chdir(os.path.dirname(__file__))
 
+logger = logging.getLogger('uurl')
+hdlr = logging.FileHandler('/var/log/uurl_%d.log' % os.getpid())
+logger.addHandler(hdlr)
+logger.setLevel(logging.INFO)
 
 BASE_URL = "http://chu.pe/"
 STATIC_ROOT_PATH = "static/"
 
-redis_cli = redis.Redis()
+p = redis.ConnectionPool(host='localhost', port=6379, db=0)
+redis_cli = redis.Redis(connection_pool = p)
+
 if BASE_URL[-1] is not '/': BASE_URL = BASE_URL + '/'
 
 @route('/')
@@ -33,8 +40,10 @@ def url(uid = None):
         ip = request['REMOTE_ADDR']
         ref = request['REFERER']
     except Exception, e:
+        logger.error("Exception: %s" % e)
         ip = ref = None
     _update_encoded_url_data(redis_cli, uid, ip, ref)
+    logger.info("Request: uid: %s ip: %s ref: %s url: %s" % (uid, ip, ref, url))
     redirect(url)
 
 @route('/s/:uid')
@@ -78,5 +87,5 @@ class GEventServerAdapter(ServerAdapter):
         from gevent.wsgi import WSGIServer
         WSGIServer((self.host, self.port), handler).serve_forever()
 
-debug(True)
+#debug(True)
 run(host='localhost', port=14000, server=GEventServerAdapter)
