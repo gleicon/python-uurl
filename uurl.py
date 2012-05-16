@@ -1,4 +1,5 @@
 from bottle import route, redirect, run, debug, send_file, abort, request, ServerAdapter, template, response
+from time import gmtime, strftime
 import redis
 import json
 import logging
@@ -13,11 +14,21 @@ logger.setLevel(logging.INFO)
 
 BASE_URL = "http://chu.pe/"
 STATIC_ROOT_PATH = "static/"
+MAX_REQ_PER_MIN = 10
 
 p = redis.ConnectionPool(host='localhost', port=6379, db=0)
 redis_cli = redis.Redis(connection_pool = p)
 
 if BASE_URL[-1] is not '/': BASE_URL = BASE_URL + '/'
+
+def throttle(route, addr): # enable if your proxy can pass the right client ip ADDR
+    if route is None or addr is None: return False
+    t = strftime("%d:%m:%Y:%H:%M:", gmtime())
+    k = "%s:%s:%s" % (t, route, addr)
+    c = redis_cli.incr(k)
+    if c > MAX_REQ_PER_MIN:
+        return False
+    return True
 
 @route('/')
 @route('/index.html')
@@ -73,6 +84,7 @@ def shorten(url, custom_url):
 
 @route('/url')
 def quick_link():
+    #if throttle('url', request.environ.get('REMOTE_ADDR')) is False: abort(401, "Not allowed - try again later")
     try:
         url = request.GET['url']
     except:
@@ -85,6 +97,7 @@ def quick_link():
 
 @route('/url', method='POST')
 def post_url():
+    #if throttle('url', request.environ.get('REMOTE_ADDR')) is False: abort(401, "Not allowed - try again later")
     url = request.POST['url']
     try:
         custom_url = request.POST['custom_url']
