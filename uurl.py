@@ -61,6 +61,27 @@ def stats(uid):
             return "%s(%s)"% (jc, json.dumps(stats))
         else:
             return json.dumps(stats)
+        
+def shorten(url, custom_url):
+    if url != None and len(url) > 1:
+        if url.find(BASE_URL) > -1: return None
+        if url.find('http') < 0: url = "http://%s" % url
+        uurl = _update_url_data(redis_cli, url, custom_url)
+        return uurl
+    else:
+        return None
+
+@route('/url')
+def quick_link():
+    try:
+        url = request.GET['url']
+    except:
+        abort(404, "No url given")
+    uurl = shorten(url, None)
+    if not uurl: 
+        abort(500, "empty or invalid url")
+    else: 
+        return template('stats', uurl = uurl, base_url = BASE_URL, url = url)
 
 @route('/url', method='POST')
 def post_url():
@@ -71,10 +92,7 @@ def post_url():
         custom_url = None
     if custom_url == "": custom_url = None
     if url != None and len(url) > 1:
-        if url.find(BASE_URL) > -1: abort(404, 'invalid url')
-        if url.find('http') < 0: url = "http://%s" % url
-        uurl = _update_url_data(redis_cli, url, custom_url)
-        if uurl == None: abort(404, 'empty request')
+        uurl = shorten(url, custom_url)
         response.content_type = "application/json"
         return '{"uurl":"%s", "url": "%s", "base_url": "%s"}' % (uurl, url, BASE_URL)
     else:
@@ -87,5 +105,5 @@ class GEventServerAdapter(ServerAdapter):
         from gevent.wsgi import WSGIServer
         WSGIServer((self.host, self.port), handler).serve_forever()
 
-#debug(True)
+debug(True)
 run(host='localhost', port=14000, server=GEventServerAdapter)
