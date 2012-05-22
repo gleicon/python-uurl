@@ -42,7 +42,7 @@
             
                 $('#content').prepend('<p>Original URL: <a href="'+data.url+'">'+data.url+'</a></p>'
                 + '<p>Shortened URL: <a href="{{base_url}}{{uurl}}">{{base_url}}{{uurl}}</a></p>' 
-                + '<p>Stats URL (with ! in the end): <a href="{{base_url}}{{uurl}}">{{base_url}}{{uurl}}!</a></p>' 
+                + '<p>Stats URL (with ! in the end): <a href="{{base_url}}{{uurl}}!">{{base_url}}{{uurl}}!</a></p>' 
 	        + '<p>Clicks since '+date_creation+': '+data.clicks + '</p>'
 	        + '<p>Visitors: '+data.visitors+'</p>'
                 + '<p>Referers: '+data.referers+'</p>');

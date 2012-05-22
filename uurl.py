@@ -93,7 +93,13 @@ def quick_link():
     if not uurl: 
         abort(500, "empty or invalid url")
     else: 
-        return template('stats', uurl = uurl, base_url = BASE_URL, url = url)
+        # two options here: render the status page or redirect to it. You might
+        # want to redirect to somewhere else passing the new uurl as parameter,
+        # etc. Dont forget that the full url == BASE_URL + uurl (+ '!' if you
+        # want the status page
+
+        #return template('stats', uurl = uurl, base_url = BASE_URL, url = url)
+        redirect(BASE_URL + uurl+"!")
 
 @route('/url', method='POST')
 def post_url():
