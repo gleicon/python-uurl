@@ -124,5 +124,6 @@ class GEventServerAdapter(ServerAdapter):
         from gevent.wsgi import WSGIServer
         WSGIServer((self.host, self.port), handler).serve_forever()
 
-debug(True)
+# uncomment for nice error 500 and stacktrace messages
+#debug(True)
 run(host='localhost', port=14000, server=GEventServerAdapter)
